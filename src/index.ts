@@ -1,14 +1,16 @@
 import 'dotenv/config'
 
-import { Client, Collection } from 'discord.js'
-import { getCommands } from './commands'
+import { Client } from 'discord.js'
+
+import { GetCommandsService } from './services/GetCommandsService'
 
 const bot = new Client()
-bot.commands = getCommands()
+bot.commands = GetCommandsService()
+bot.queues = new Map()
 
 bot.on('ready', async () => {
-    console.log('Umbrionm is running...')
-    bot.user?.setActivity('discor.js', { type: 'LISTENING' })
+    console.log('Umbreonm is running...')
+    bot.user?.setActivity('discord.js', { type: 'LISTENING' })
 })
 
 bot.on('message', async (msg) => {
