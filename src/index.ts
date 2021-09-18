@@ -10,7 +10,7 @@ bot.queues = new Map()
 
 bot.on('ready', async () => {
     console.log('Umbreonm is running...')
-    bot.user?.setActivity('discord.js', { type: 'LISTENING' })
+    bot.user?.setActivity('dura do orlando', { type: 'PLAYING' })
 })
 
 bot.on('message', async (msg) => {
