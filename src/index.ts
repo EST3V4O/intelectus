@@ -10,7 +10,7 @@ bot.queues = new Map()
 
 bot.on('ready', async () => {
     console.log('Umbreonm is running...')
-    bot.user?.setActivity('dura do orlando', { type: 'PLAYING' })
+    bot.user?.setActivity({ name: '-help', type: 'LISTENING' })
 })
 
 bot.on('message', async (msg) => {

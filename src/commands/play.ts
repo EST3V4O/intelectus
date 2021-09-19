@@ -15,6 +15,8 @@ async function execute(bot: Client, msg: Message, args: string[]) {
     if(result && result.videos.length > 0) {
       const song = result.videos[0]
 
+      console.log(song.url)
+
       const queue = await QueueService({ bot, msg, song })
       PlayMusicService(bot, msg, queue)
     }

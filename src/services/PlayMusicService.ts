@@ -1,12 +1,17 @@
 import ytdl from 'ytdl-core-discord'
 
-import { VideoSearchResult } from 'yt-search'
 import { Client, Message } from "discord.js";
 import { Queue } from '../@types/Queue';
 
 export async function PlayMusicService(bot: Client, msg: Message, queue: Queue) {
   const guildId = msg.member?.guild.id || ''
-  const connection = await msg.member?.voice.channel?.join()
+  const voiceChannel = msg.member?.voice.channel
+
+  if(!voiceChannel) {
+    return msg.channel.send('Entry in a voice channel')
+  }
+
+  const connection = await voiceChannel?.join()
 
   if(connection && queue) {
     const dispatcher = connection.play(await ytdl(queue.currentMusic[0].url, {
@@ -14,7 +19,7 @@ export async function PlayMusicService(bot: Client, msg: Message, queue: Queue) 
     }), {
       type: 'opus'
     })
-  
+
     dispatcher.on('finish', () => {
       queue.currentMusic.shift()
       bot.queues.set(guildId, queue)

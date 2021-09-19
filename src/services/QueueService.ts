@@ -1,7 +1,5 @@
-
 import { Client, Message } from 'discord.js'
 import { VideoSearchResult } from 'yt-search'
-import { Queue } from '../@types/Queue'
 
 type QueueServiceParams = {
   bot: Client;
@@ -12,13 +10,13 @@ type QueueServiceParams = {
 export async function QueueService({ bot, msg, song }: QueueServiceParams) {
   const guildId = msg.member?.guild.id || ''
 
-  let currentQueue = bot.queues.get(guildId)
+  const currentQueue = bot.queues.get(guildId)
   
   if(!currentQueue) {
     const queue = {
       musics: [song],
       currentMusic: [song]
-    } as Queue
+    }
     bot.queues.set(guildId, queue)
     return queue
   } else {
