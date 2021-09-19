@@ -9,7 +9,7 @@ bot.commands = GetCommandsService()
 bot.queues = new Map()
 
 bot.on('ready', async () => {
-    console.log('Umbreonm is running...')
+    console.log('Intelectus is running...')
     bot.user?.setActivity({ name: '-help', type: 'LISTENING' })
 })
 
