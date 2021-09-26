@@ -8,7 +8,7 @@ import { GetMusicsService } from '../services/GetMusicsService';
 async function execute(bot: Client, msg: Message, args: string[]) {
   const stringArgs = args.join(' ')
 
-  GetMusicsService(bot, msg, args)
+  GetMusicsService(bot, msg, stringArgs)
 
   // ytdlSearch(stringArgs, async (err, result) => {
   //   if(err) {

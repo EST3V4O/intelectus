@@ -2,11 +2,33 @@ import { Client, Message } from "discord.js"
 
 import { FindMusicsService } from "./FindMusicsService"
 
-export async function GetMusicsService(bot: Client, msg: Message, args: string[]) {
-  const allArgs = args.join(' ')
-  const [isUrl] = allArgs.split('://')
+export async function GetMusicsService(bot: Client, msg: Message, args: string) {
+  const isUrl = args.startsWith('http' || 'https')
+  const isYoutube = args.includes('youtube')
 
-  await FindMusicsService({ bot, msg, toFind: allArgs })
+  if(isUrl) {
+    if(isYoutube) {
+      const isVideoId = args.includes('v=')
+      const isListId = args.includes('list=')
+  
+      if(isVideoId) {
+        const [, videoId] = args.split('v=')
+  
+        await FindMusicsService({ videoId })
+      }
+
+      if(isListId) {
+        const [, listId] = args.split('list=')
+  
+        await FindMusicsService({ listId })
+      }
+
+    }
+  }
+
+  await FindMusicsService({ query: args })
+
+  // await FindMusicsService({ bot, msg, toFind: allArgs })
 
   // if(isUrl === 'http' || isUrl === 'https') {
   //   const [, videoId, listId] = allArgs.split('=')

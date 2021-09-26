@@ -1,6 +1,10 @@
 
 declare module 'yt-search' {  
 
+  export = yts;
+
+  declare const yts: typeof search & { search: typeof search };
+
   declare function search(
     query: string | yts.Options
   ): Promise<yts.SearchResult>;
@@ -88,6 +92,7 @@ declare module 'yt-search' {
         listId: string;
         thumbnail: string;
         author: Author;
+        url: string;
     }
 
     export interface PlaylistMetadataResult {

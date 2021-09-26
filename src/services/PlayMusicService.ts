@@ -1,7 +1,6 @@
 import ytdl from 'ytdl-core-discord'
 
-import { Client, Message } from "discord.js";
-import { Queue } from '../@types/Queue';
+import { Client, Message, Queue } from "discord.js";
 
 export async function PlayMusicService(bot: Client, msg: Message, queue: Queue) {
   const guildId = msg.member?.guild.id || ''
@@ -23,6 +22,7 @@ export async function PlayMusicService(bot: Client, msg: Message, queue: Queue) 
     dispatcher.on('finish', () => {
       queue.currentMusic.shift()
       bot.queues.set(guildId, queue)
+
       if(queue.currentMusic.length > 0) {
           PlayMusicService(bot, msg, queue)
         }
