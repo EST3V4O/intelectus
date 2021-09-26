@@ -1,38 +1,21 @@
-import ytdlSearch from 'yt-search'
+import { search } from 'yt-search'
 
 import { Client, Message } from "discord.js"
 
-type FindMusicsServiceParams = {
-  bot: Client,
-  msg: Message,
-  toFind: string;
-  type: string;
+type SearchOptions = {
+  query?: string;
+  videoId?: string;
+  listId?:string;
 }
 
-export async function FindMusicsService({ bot, msg, toFind, type  }: FindMusicsServiceParams) {
-  switch (type) {
-    case 'query':
-      return ytdlSearch({ query: toFind }, (err, result) => {
-        console.log(result)
-        return result
-      })
+type FindMusicsServiceParams = {
+  bot: Client;
+  msg: Message;
+  toFind: string;
+}
 
-    case 'videoId':
-      let result
-      ytdlSearch({ videoId: toFind }, (err, song) => {
-        result = song
-      })
-      console.log(result)
-      return result
+export async function FindMusicsService({ bot, toFind  }: FindMusicsServiceParams) {
+  const oi = await search('adestrador de madeon')
 
-    case 'listId':
-      return ytdlSearch({ listId: toFind }, (err, result) => {
-        console.log(result)
-        return result
-      })
-  
-    default:
-      throw new Error('Missing type')
-      break;
-  }
+  console.log(oi.all[0])
 }

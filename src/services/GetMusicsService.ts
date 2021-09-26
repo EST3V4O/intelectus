@@ -6,21 +6,23 @@ export async function GetMusicsService(bot: Client, msg: Message, args: string[]
   const allArgs = args.join(' ')
   const [isUrl] = allArgs.split('://')
 
-  if(isUrl === 'http' || isUrl === 'https') {
-    const [, videoId, listId] = allArgs.split('=')
+  await FindMusicsService({ bot, msg, toFind: allArgs })
 
-    if(listId) {
+  // if(isUrl === 'http' || isUrl === 'https') {
+  //   const [, videoId, listId] = allArgs.split('=')
 
-    }
+  //   if(listId) {
 
-    if(videoId) {
-      const result = await FindMusicsService({ bot, msg, type: 'videoId', toFind: videoId })
+  //   }
 
-      console.log(result)
-      // return result
-    }
+  //   if(videoId) {
+  //     const result = await FindMusicsService({ bot, msg, type: 'videoId', toFind: videoId })
 
-  }
+  //     console.log(result)
+  //     // return result
+  //   }
+
+  // }
   // const [, , app] = allArgs.split('/')
   // const isYoutube = app.includes('youtube')
 
