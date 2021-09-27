@@ -1,10 +1,10 @@
 import { Client, Message } from 'discord.js'
-import { VideoSearchResult } from 'yt-search'
+import { VideoSearchResult, SearchResult } from 'yt-search'
 
 type QueueServiceParams = {
   bot: Client;
   msg: Message;
-  song: VideoSearchResult
+  song: VideoSearchResult | SearchResult;
 }
 
 export async function QueueService({ bot, msg, song }: QueueServiceParams) {
