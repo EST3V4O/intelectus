@@ -1,4 +1,4 @@
-import { SearchResult, VideoSearchResult } from "yt-search"
+import { VideoMetadataResult, VideoSearchResult } from "yt-search"
 
 declare module 'discord.js' {
     export type Command = {
@@ -8,8 +8,8 @@ declare module 'discord.js' {
     }
 
     export type Queue = {
-        currentMusic: (VideoSearchResult | SearchResult)[];
-        musics: (VideoSearchResult | SearchResult)[];
+        currentMusic: (VideoSearchResult | VideoMetadataResult)[];
+        musics: (VideoSearchResult | VideoMetadataResult) [];
     }
 
     export interface Client {

@@ -1,11 +1,10 @@
-import { SearchResult } from "yt-search";
 
-import { FindMusicsService } from "./FindMusicsService";
-import { GetMusicVideoIdService } from "./GetMusicByVideoIdService";
+import { FindMusicByListIdService } from "./FindMusicByListIdService"
+import { FindMusicByVideoIdService } from "./FindMusicByVideoIdService"
 
 export async function GetMusicByPlaylistService(listId: string) {
-  const playlist = (await FindMusicsService({ listId })).videos.map(async music => {
-    return await GetMusicVideoIdService(music.videoId)
+  const playlist = (await FindMusicByListIdService(listId)).videos.map(async music => {
+    return await FindMusicByVideoIdService(music.videoId)
   })
 
   return playlist

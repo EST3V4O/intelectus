@@ -2,9 +2,10 @@ import { Client, Message } from "discord.js";
 
 import { PlayMusicService } from '../services/PlayMusicService';
 import { QueueService } from '../services/QueueService';
-import { GetMusicVideoIdService } from "../services/GetMusicByVideoIdService";
 import { GetMusicByPlaylistService } from "../services/GetMusicByPlaylistService";
-import { FindMusicsService } from "../services/FindMusicsService";
+import { FindMusicByVideoIdService } from "../services/FindMusicByVideoIdService";
+import { FindMusicByQueryService } from "../services/FindMusicByQueryService";
+import { MusicEmbed } from "../messages/MusicEmbed";
 
 async function execute(bot: Client, msg: Message, args: string[]) {
   const guildId = msg.member?.guild.id || ''
@@ -48,7 +49,7 @@ async function execute(bot: Client, msg: Message, args: string[]) {
       if(isVideoId) {
         const [, videoId] = allArgs.split('v=')
   
-        const video = await GetMusicVideoIdService(videoId)
+        const video = await FindMusicByVideoIdService(videoId)
 
         const queue = bot.queues.get(guildId)
 
@@ -63,13 +64,20 @@ async function execute(bot: Client, msg: Message, args: string[]) {
       }
   }
 
-  const music = (await FindMusicsService({ query: allArgs })).videos[0]
+  const music = (await FindMusicByQueryService(allArgs)).videos[0]
   const queue = bot.queues.get(guildId)
-  
+
   if(!queue) {
     const queue = await QueueService({ bot, msg, song: music })
     PlayMusicService(bot, msg, queue)
-    return
+
+    const musicEmbed = MusicEmbed({
+      title: music.title, url: music.url,
+      thumbnail: music.thumbnail,
+      requestBy: msg.author.username
+    })
+
+    return msg.channel.send({ embed: musicEmbed })
   }
 
   await QueueService({ bot, msg, song: music })

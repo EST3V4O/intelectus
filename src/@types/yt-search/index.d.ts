@@ -6,15 +6,27 @@ declare module 'yt-search' {
   declare const yts: typeof search & { search: typeof search };
 
   declare function search(
+    query: string | yts.Options,
+    callback: (err: Error | string | null | undefined, data: yts.SearchResult) => void,
+): void;
+  declare function search(
     query: string | yts.Options
   ): Promise<yts.SearchResult>;
 
   declare function search(
-    query: string | yts.Options
+    query: yts.VideoMetadataOptions,
+    callback: (err: Error | string | null | undefined, data: yts.VideoMetadataResult) => void,
+): void;
+  declare function search(
+    query: yts.VideoMetadataOptions
   ): Promise<yts.VideoMetadataResult>;
 
   declare function search(
-    query: string | yts.Options
+    query: yts.PlaylistMetadataOptions,
+    callback: (err: Error | string | null | undefined, data: yts.PlaylistMetadataResult) => void,
+): void;
+  declare function search(
+    query: string | yts.PlaylistMetadataOptions
   ): Promise<yts.PlaylistMetadataResult>;
   
   declare namespace yts {
