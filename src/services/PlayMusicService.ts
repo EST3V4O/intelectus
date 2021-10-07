@@ -1,6 +1,7 @@
 import ytdl from 'ytdl-core-discord'
 
 import { Client, Message, Queue } from "discord.js";
+import { MusicEmbed } from '../messages/MusicEmbed';
 
 export async function PlayMusicService(bot: Client, msg: Message, queue: Queue) {
   const guildId = msg.member?.guild.id || ''
@@ -25,6 +26,16 @@ export async function PlayMusicService(bot: Client, msg: Message, queue: Queue) 
 
       if(queue.currentMusic.length > 0) {
           PlayMusicService(bot, msg, queue)
+
+          const music = queue.currentMusic[0]
+          const musicEmbed = MusicEmbed({
+            title: music.title,
+            url: music.url,
+            thumbnail: music.thumbnail,
+            requestBy: msg.member?.user
+          })
+          
+          return msg.channel.send({ embed: musicEmbed })
         }
     })
   }

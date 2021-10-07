@@ -1,15 +1,15 @@
 import { MessageEmbed, User } from 'discord.js'
 
-type MusicEmbedParams = {
+type MusicAddedEmbedParams = {
   requestBy?: User;
   title: string;
   url: string;
   thumbnail: string;
 }
 
-export function MusicEmbed({ title, url, thumbnail, requestBy }: MusicEmbedParams) {
+export function MusicAddedEmbed({ title, url, thumbnail, requestBy }: MusicAddedEmbedParams) {
   return new MessageEmbed()
-  .setTitle('Now playing')
+  .setTitle('Added on queue')
   .setDescription(`[${title}](${url}) [<@${requestBy}>]`)
   .setThumbnail(thumbnail)
 }

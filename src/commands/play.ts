@@ -5,7 +5,7 @@ import { QueueService } from '../services/QueueService';
 import { GetMusicByPlaylistService } from "../services/GetMusicByPlaylistService";
 import { FindMusicByVideoIdService } from "../services/FindMusicByVideoIdService";
 import { FindMusicByQueryService } from "../services/FindMusicByQueryService";
-import { MusicEmbed } from "../messages/MusicEmbed";
+import { MusicAddedEmbed } from "../messages/MusicAddedEmbed";
 
 async function execute(bot: Client, msg: Message, args: string[]) {
   const guildId = msg.member?.guild.id || ''
@@ -66,21 +66,23 @@ async function execute(bot: Client, msg: Message, args: string[]) {
 
   const music = (await FindMusicByQueryService(allArgs)).videos[0]
   const queue = bot.queues.get(guildId)
+  
+  const musicEmbed = MusicAddedEmbed({
+      title: music.title,
+      url: music.url,
+      thumbnail: music.thumbnail,
+      requestBy: msg.member?.user,
+  })
 
   if(!queue) {
     const queue = await QueueService({ bot, msg, song: music })
     PlayMusicService(bot, msg, queue)
-
-    const musicEmbed = MusicEmbed({
-      title: music.title, url: music.url,
-      thumbnail: music.thumbnail,
-      requestBy: msg.author.username
-    })
-
-    return msg.channel.send({ embed: musicEmbed })
+    
+    return msg.channel.send(musicEmbed)
   }
-
+  
   await QueueService({ bot, msg, song: music })
+  return msg.channel.send(musicEmbed)
 }
 
 export = {
