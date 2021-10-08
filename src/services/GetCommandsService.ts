@@ -1,8 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-import { Collection } from 'discord.js'
-import { Command } from '../@types/Command'
+import { Collection, Command } from 'discord.js'
 
 export function GetCommandsService() {
   const commandsDir = path.join(__dirname, '../', './commands')
