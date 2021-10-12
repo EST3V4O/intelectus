@@ -4,7 +4,7 @@ import { Client, Message, Queue } from "discord.js";
 import { MusicEmbed } from '../messages/MusicEmbed';
 
 export async function PlayMusicService(bot: Client, msg: Message, queue: Queue) {
-  const guildId = msg.member?.guild.id || ''
+  const guildId = msg.guild?.id || ''
   const voiceChannel = msg.member?.voice.channel
 
   if(!voiceChannel) {
@@ -14,13 +14,15 @@ export async function PlayMusicService(bot: Client, msg: Message, queue: Queue) 
   const connection = await voiceChannel?.join()
 
   if(connection && queue) {
-    const dispatcher = connection.play(await ytdl(queue.currentMusic[0].url, {
-      filter: 'audioonly', highWaterMark: 1 << 25
+    queue.dispatcher = connection.play(await ytdl(queue.currentMusic[0].url, {
+      filter: 'audioonly',
     }), {
       type: 'opus'
     })
 
-    dispatcher.on('finish', () => {
+    bot.queues.set(guildId, queue)
+
+    queue.dispatcher.on('finish', () => {
       queue.currentMusic.shift()
       bot.queues.set(guildId, queue)
 
@@ -37,6 +39,10 @@ export async function PlayMusicService(bot: Client, msg: Message, queue: Queue) 
         
         return msg.channel.send({ embed: musicEmbed })
       }
+    })
+
+    queue.dispatcher.on('speaking', () => {
+      console.log('speak')
     })
   }
 }

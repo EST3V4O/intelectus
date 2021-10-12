@@ -10,6 +10,7 @@ declare module 'discord.js' {
     export type Queue = {
         currentMusic: (VideoSearchResult | VideoMetadataResult)[];
         musics: (VideoSearchResult | VideoMetadataResult) [];
+        dispatcher?: StreamDispatcher;
     }
 
     export interface Client {
