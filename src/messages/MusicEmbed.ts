@@ -10,6 +10,6 @@ type MusicEmbedParams = {
 export function MusicEmbed({ title, url, thumbnail, requestBy }: MusicEmbedParams) {
   return new MessageEmbed()
   .setTitle('Now playing')
-  .setDescription(`[${title}](${url}) [<@${requestBy}>]`)
+  .setDescription(`[${title}](${url}) [${requestBy}]`)
   .setThumbnail(thumbnail)
 }

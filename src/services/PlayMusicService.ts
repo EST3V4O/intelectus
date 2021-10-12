@@ -25,18 +25,18 @@ export async function PlayMusicService(bot: Client, msg: Message, queue: Queue) 
       bot.queues.set(guildId, queue)
 
       if(queue.currentMusic.length > 0) {
-          PlayMusicService(bot, msg, queue)
+        PlayMusicService(bot, msg, queue)
 
-          const music = queue.currentMusic[0]
-          const musicEmbed = MusicEmbed({
-            title: music.title,
-            url: music.url,
-            thumbnail: music.thumbnail,
-            requestBy: msg.member?.user
-          })
-          
-          return msg.channel.send({ embed: musicEmbed })
-        }
+        const music = queue.currentMusic[0]
+        const musicEmbed = MusicEmbed({
+          title: music.title,
+          url: music.url,
+          thumbnail: music.thumbnail,
+          requestBy: msg.member?.user
+        })
+        
+        return msg.channel.send({ embed: musicEmbed })
+      }
     })
   }
 }

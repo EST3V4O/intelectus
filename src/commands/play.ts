@@ -76,12 +76,16 @@ async function execute(bot: Client, msg: Message, args: string[]) {
 
   if(!queue) {
     const queue = await QueueService({ bot, msg, song: music })
-    PlayMusicService(bot, msg, queue)
+    await PlayMusicService(bot, msg, queue)
     
     return msg.channel.send(musicEmbed)
   }
   
-  await QueueService({ bot, msg, song: music })
+  if(queue.currentMusic.length === 0) {
+    const newQueue = await QueueService({ bot, msg, song: music })
+    await PlayMusicService(bot, msg, newQueue)
+  }
+
   return msg.channel.send(musicEmbed)
 }
 
