@@ -1,5 +1,5 @@
 {
-  "name": "umbrionm",
+  "name": "intelectus",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -25,6 +25,6 @@
     "ytdl-core-discord": "^1.3.1"
   },
   "engines": {
-    "node": "14.5.5"
+    "node": "^14.5.5"
   }
 }
