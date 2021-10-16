@@ -7,7 +7,7 @@ async function execute(bot: Client, msg: Message, args: string[]) {
   const queue = bot.queues.get(guildId)
 
   if(!queue) {
-    return msg.channel.send('Not have queue')
+    return msg.channel.send('Not have queue!')
   }
 
   queue.currentMusic.shift()
