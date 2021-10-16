@@ -1,11 +1,12 @@
 import ytdl from 'ytdl-core-discord'
 
-import { Client, Message, Queue } from "discord.js";
-import { MusicEmbed } from '../messages/MusicEmbed';
+import { Client, Message } from "discord.js";
+import { NowPlaying } from '../messages/NowPlaying';
 
-export async function PlayMusicService(bot: Client, msg: Message, queue: Queue) {
+export async function PlayMusicService(bot: Client, msg: Message) {
   const guildId = msg.guild?.id || ''
   const voiceChannel = msg.member?.voice.channel
+  const queue = bot.queues.get(guildId)
 
   if(!voiceChannel) {
     return msg.channel.send('Entry in a voice channel')
@@ -20,29 +21,26 @@ export async function PlayMusicService(bot: Client, msg: Message, queue: Queue) 
       type: 'opus'
     })
 
-    bot.queues.set(guildId, queue)
-
     queue.dispatcher.on('finish', () => {
       queue.currentMusic.shift()
       bot.queues.set(guildId, queue)
 
       if(queue.currentMusic.length > 0) {
-        PlayMusicService(bot, msg, queue)
+        PlayMusicService(bot, msg)
 
         const music = queue.currentMusic[0]
-        const musicEmbed = MusicEmbed({
+        const nowPlaying = NowPlaying({
           title: music.title,
           url: music.url,
-          thumbnail: music.thumbnail,
           requestBy: msg.member?.user
         })
         
-        return msg.channel.send({ embed: musicEmbed })
+        return msg.channel.send(nowPlaying)
       }
-    })
 
-    queue.dispatcher.on('speaking', () => {
-      console.log('speak')
+      if(queue.currentMusic.length === 0) {
+        bot.queues.set(guildId, undefined)
+      }
     })
   }
 }

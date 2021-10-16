@@ -15,6 +15,6 @@ declare module 'discord.js' {
 
     export interface Client {
         commands: Collection<string, Command>;
-        queues: Map<string, Queue>;
+        queues: Map<string, Queue | undefined>;
     }
 }

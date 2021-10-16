@@ -15,4 +15,4 @@ export = {
   name: 'resume',
   help: 'resume',
   execute
-}
+} 

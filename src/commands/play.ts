@@ -2,10 +2,12 @@ import { Client, Message } from "discord.js";
 
 import { PlayMusicService } from '../services/PlayMusicService';
 import { QueueService } from '../services/QueueService';
+import { FindMusicByQueryService } from "../services/FindMusicByQueryService";
+import { AddedOnQueue } from "../messages/AddedOnQueue";
 import { GetMusicByPlaylistService } from "../services/GetMusicByPlaylistService";
 import { FindMusicByVideoIdService } from "../services/FindMusicByVideoIdService";
-import { FindMusicByQueryService } from "../services/FindMusicByQueryService";
-import { MusicAddedEmbed } from "../messages/MusicAddedEmbed";
+import { NowPlaying } from "../messages/NowPlaying";
+import { QueuedTracks } from "../messages/QueuedTracks";
 
 async function execute(bot: Client, msg: Message, args: string[]) {
   const guildId = msg.member?.guild.id || ''
@@ -16,77 +18,85 @@ async function execute(bot: Client, msg: Message, args: string[]) {
     const isListId = allArgs.includes('list=')
     const isVideoId = allArgs.includes('v=')
 
+    const queue = bot.queues.get(guildId)
+
       if(isListId) {
         const [, listId] = allArgs.split('list=')
   
-        const playlist = await GetMusicByPlaylistService(listId)
+        const musics = await Promise.all(await GetMusicByPlaylistService(listId))
 
-        const queue = bot.queues.get(guildId)
+        const queuedTracks = QueuedTracks(musics.length)
         
         if(!queue) {
-          playlist.forEach(async (music, index) => {
-            const video = await music
-            await QueueService({ bot, msg, song: video })
-            
-            if(playlist.length === (index + 1)) {
-              const queue = bot.queues.get(guildId)
-              if(queue) {
-                PlayMusicService(bot, msg, queue)
-              }
-            }
-          })
-          return
+          const queue = {
+            currentMusic: musics,
+            musics: musics
+          }
+          bot.queues.set(guildId, queue)
+          await PlayMusicService(bot, msg)
+
+          return msg.channel.send(queuedTracks)
         }
 
-        playlist.forEach(async (music) => {
-          const video = await music
-          await QueueService({ bot, msg, song: video })
-        })
-
-        return
+        const newQueue = {
+          currentMusic: [...queue.currentMusic, ...musics],
+          musics: [...queue.musics, ...musics]
+        }
+        bot.queues.set(guildId, newQueue)
+        return msg.channel.send(queuedTracks)
       }
 
       if(isVideoId) {
         const [, videoId] = allArgs.split('v=')
   
-        const video = await FindMusicByVideoIdService(videoId)
-
-        const queue = bot.queues.get(guildId)
-
+        const music = await FindMusicByVideoIdService(videoId)
+        
         if(!queue) {
-          const queue = await QueueService({ bot, msg, song: video })
-          PlayMusicService(bot, msg, queue)
-          return
-        }
+          const nowPlaying = NowPlaying({
+            title: music.title,
+            url: music.url,
+            requestBy: msg.member?.user,
+          })
+          await QueueService({ bot, msg, song: music })
+          await PlayMusicService(bot, msg)
 
-        await QueueService({ bot, msg, song: video })
-        return
+          return msg.channel.send(nowPlaying)
+        }
+        
+        const addedOnQueue = AddedOnQueue({
+          title: music.title,
+          url: music.url,
+          requestBy: msg.member?.user,
+        })
+        await QueueService({ bot, msg, song: music })
+        
+        return msg.channel.send(addedOnQueue)
       }
   }
 
   const music = (await FindMusicByQueryService(allArgs)).videos[0]
   const queue = bot.queues.get(guildId)
   
-  const musicEmbed = MusicAddedEmbed({
+  if(!queue) {
+    const nowPlaying = NowPlaying({
       title: music.title,
       url: music.url,
-      thumbnail: music.thumbnail,
       requestBy: msg.member?.user,
+    })
+    await QueueService({ bot, msg, song: music })
+    await PlayMusicService(bot, msg)
+
+    return msg.channel.send(nowPlaying)
+  }
+
+  const addedOnQueue = AddedOnQueue({
+    title: music.title,
+    url: music.url,
+    requestBy: msg.member?.user,
   })
+  await QueueService({ bot, msg, song: music })
 
-  if(!queue) {
-    const queue = await QueueService({ bot, msg, song: music })
-    await PlayMusicService(bot, msg, queue)
-    
-    return msg.channel.send(musicEmbed)
-  }
-  
-  if(queue.currentMusic.length === 0) {
-    const newQueue = await QueueService({ bot, msg, song: music })
-    await PlayMusicService(bot, msg, newQueue)
-  }
-
-  return msg.channel.send(musicEmbed)
+  return msg.channel.send(addedOnQueue)
 }
 
 export = {
