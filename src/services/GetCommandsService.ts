@@ -14,6 +14,10 @@ export function GetCommandsService() {
         const command = require(`${commandsDir}/${commandFile}`) as Command
 
         commands.set(command.name, command)
+
+        if(command.shortcut) {
+          commands.set(command.shortcut, command)
+        }
     })
 
     return commands

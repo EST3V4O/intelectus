@@ -3,7 +3,9 @@ import { VideoMetadataResult, VideoSearchResult } from "yt-search"
 declare module 'discord.js' {
     export type Command = {
         name: string;
+        shortcut?: string;
         help: string;
+        emoji?: string;
         execute: (bot: Client, msg: Message, args: string[]) => void;
     }
 
