@@ -6,7 +6,7 @@ declare module 'discord.js' {
         shortcut?: string;
         help: string;
         emoji?: string;
-        execute: (bot: Client, msg: Message, args: string[]) => void;
+        execute: (bot: Client, msg: Message, args: string[]) => Promise<void>;
     }
 
     export type Queue = {

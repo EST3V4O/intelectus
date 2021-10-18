@@ -20,7 +20,13 @@ bot.on('message', async (msg) => {
     const args = msg.content.slice(process.env.PREFIX?.length).split(' ')
     const command = args.shift()?.toLocaleLowerCase().trim()
 
-    bot.commands.get(command || '')?.execute(bot, msg, args)
+    try {
+        const findCommand = bot.commands.get(command || '')
+
+        await findCommand?.execute(bot, msg, args)
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 bot.login(process.env.TOKEN)
