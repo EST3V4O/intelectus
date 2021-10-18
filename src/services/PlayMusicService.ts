@@ -8,10 +8,6 @@ export async function PlayMusicService(bot: Client, msg: Message) {
   const voiceChannel = msg.member?.voice.channel
   const queue = bot.queues.get(guildId)
 
-  if(!voiceChannel) {
-    return msg.channel.send('Entry in a voice channel')
-  }
-
   const connection = await voiceChannel?.join()
 
   if(connection && queue) {

@@ -8,7 +8,7 @@ async function execute(bot: Client, msg: Message, args: string[]) {
   const queue = bot.queues.get(guildId)
 
   if(!queue) {
-    const errorMessage = ErrorMessage(':no_entry_sign:', 'Not have queue!' )
+    const errorMessage = ErrorMessage('Not have queue!' )
     return msg.channel.send(errorMessage)
   }
 
@@ -16,7 +16,7 @@ async function execute(bot: Client, msg: Message, args: string[]) {
   bot.queues.set(guildId, queue)
 
   if(queue.currentMusic.length === 0) {
-    const errorMessage = ErrorMessage(':no_entry_sign:', 'Not have music after that!')
+    const errorMessage = ErrorMessage('Not have music after that!')
     return msg.channel.send(errorMessage)
   }
 

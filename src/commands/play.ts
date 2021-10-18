@@ -14,6 +14,12 @@ async function execute(bot: Client, msg: Message, args: string[]) {
   const guildId = msg.member?.guild.id || ''
   const allArgs = args.join(' ')
   const isUrl = allArgs.startsWith('http' || 'https')
+  const voiceChannel = msg.member?.voice.channel
+
+  if(!voiceChannel) {
+    const errorMessage = ErrorMessage('Entry in a voice channel!')
+    return msg.channel.send(errorMessage)
+  }
 
   if(isUrl) {
     const isListId = allArgs.includes('list=')
@@ -26,7 +32,7 @@ async function execute(bot: Client, msg: Message, args: string[]) {
 
       const musics = await Promise.all(await GetMusicByPlaylistService(listId))
       if(!musics) {
-        const errorMessage = ErrorMessage(':no_entry_sign:', 'Could not found musics!')
+        const errorMessage = ErrorMessage('Could not found musics!')
         return msg.channel.send(errorMessage)
       }
 
@@ -56,7 +62,7 @@ async function execute(bot: Client, msg: Message, args: string[]) {
 
       const music = await FindMusicByVideoIdService(videoId)
       if(!music) {
-        const errorMessage = ErrorMessage(':no_entry_sign:', 'Could not found music!')
+        const errorMessage = ErrorMessage('Could not found music!')
         return msg.channel.send(errorMessage)
       }
       
@@ -82,13 +88,13 @@ async function execute(bot: Client, msg: Message, args: string[]) {
       return msg.channel.send(addedOnQueue)
     }
 
-    const errorMessage = ErrorMessage(':no_entry_sign:', 'Could not found url!')
+    const errorMessage = ErrorMessage('Could not found url!')
     return msg.channel.send(errorMessage)
   }
 
   const music = (await FindMusicByQueryService(allArgs)).videos[0]
   if(!music) {
-    const errorMessage = ErrorMessage(':no_entry_sign:', 'Could not found music!')
+    const errorMessage = ErrorMessage('Could not found music!')
     return msg.channel.send(errorMessage)
   }
 
